@@ -303,6 +303,11 @@ class DomainTest {
     void businessCardsStartWithCropMarks() {
         assertEquals(CutGuides.CROP_MARKS, LabelDesign.empty(CARDS).cutGuides());
         assertEquals(CutGuides.NONE, LabelDesign.empty(ADDRESS).cutGuides());
+        // From an address sheet to business cards: crop marks, unless the user chose other guides.
+        assertEquals(CutGuides.CROP_MARKS, LabelDesign.empty(ADDRESS).withSheet(CARDS).cutGuides());
+        assertEquals(CutGuides.OUTLINES, LabelDesign.empty(ADDRESS).withCutGuides(CutGuides.OUTLINES)
+                .withSheet(CARDS).cutGuides());
+        assertEquals(CutGuides.NONE, LabelDesign.empty(CARDS).withSheet(ADDRESS).cutGuides());
     }
 
     @Test
