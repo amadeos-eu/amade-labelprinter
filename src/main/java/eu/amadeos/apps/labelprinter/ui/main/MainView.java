@@ -53,13 +53,13 @@ public interface MainView {
     /**
      * What the print window needs.
      *
-     * @param plans     the plan for a mode, starting at position 0
+     * @param plans     the plan for a mode, starting at a position of the first sheet (from 0)
      * @param printers  the printers' names
      * @param last      the printer chosen last
      * @param offsets   the saved adjustment of a printer, {dx, dy}
      * @param testPage  prints the test page with the printer and adjustment of a choice
      */
-    record PrintRequest(LabelDesign design, Function<PrintChoice.Mode, PrintPlan> plans, List<String> printers,
+    record PrintRequest(LabelDesign design, java.util.function.BiFunction<PrintChoice.Mode, Integer, PrintPlan> plans, List<String> printers,
                         Optional<String> last, Function<String, double[]> offsets,
                         java.util.function.Consumer<PrintChoice> testPage) {
     }
