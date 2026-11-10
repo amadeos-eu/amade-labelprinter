@@ -23,9 +23,12 @@ public record LabelDesign(SheetTemplate sheet, Side front, Side back, CutGuides 
     }
 
     public static LabelDesign empty(SheetTemplate sheet) {
-        CutGuides guides = sheet.kind() == SheetKind.BUSINESS_CARD && sheet.gapX() > 0 ? CutGuides.CROP_MARKS
-                : CutGuides.NONE;
-        return new LabelDesign(sheet, Side.EMPTY, null, guides, 1, 1);
+        return new LabelDesign(sheet, Side.EMPTY, null, defaultGuides(sheet), 1, 1);
+    }
+
+    /** Crop marks at the edge for business cards, nothing for labels, which come cut. */
+    static CutGuides defaultGuides(SheetTemplate sheet) {
+        return sheet.kind() == SheetKind.BUSINESS_CARD ? CutGuides.CROP_MARKS : CutGuides.NONE;
     }
 
     public boolean twoSided() {
@@ -36,8 +39,10 @@ public record LabelDesign(SheetTemplate sheet, Side front, Side back, CutGuides 
         return backSide && back != null ? back : front;
     }
 
+    /** Another sheet; cut guides the user did not choose follow the kind of the new sheet. */
     public LabelDesign withSheet(SheetTemplate s) {
-        return new LabelDesign(s, front, back, cutGuides, counterStart, counterDigits);
+        CutGuides guides = cutGuides == defaultGuides(sheet) ? defaultGuides(s) : cutGuides;
+        return new LabelDesign(s, front, back, guides, counterStart, counterDigits);
     }
 
     public LabelDesign withSide(boolean backSide, Side side) {
