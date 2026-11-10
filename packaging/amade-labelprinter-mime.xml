@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Label designs of amade-labelprinter, installed as /usr/share/mime/packages/amade-labelprinter.xml so that
+     Files knows them. A .label file is a ZIP with label.json and the pictures of the design. -->
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-amadeos-label">
+    <comment>Label design</comment>
+    <comment xml:lang="de">Etikettenentwurf</comment>
+    <comment xml:lang="fr">Modèle d'étiquette</comment>
+    <comment xml:lang="es">Diseño de etiqueta</comment>
+    <comment xml:lang="it">Modello di etichetta</comment>
+    <sub-class-of type="application/zip"/>
+    <glob pattern="*.label"/>
+  </mime-type>
+</mime-info>

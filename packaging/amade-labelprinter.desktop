@@ -1,0 +1,25 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=amadeOS Label Printer
+Name[de]=amadeOS Etikettendruck
+Name[fr]=amadeOS Impression d'étiquettes
+Name[es]=amadeOS Impresión de etiquetas
+Name[it]=amadeOS Stampa etichette
+GenericName=Label Printer
+GenericName[de]=Etiketten und Visitenkarten
+GenericName[fr]=Étiquettes et cartes de visite
+GenericName[es]=Etiquetas y tarjetas de visita
+GenericName[it]=Etichette e biglietti da visita
+Comment=Print labels and business cards on label sheets, with mail merge
+Comment[de]=Etiketten und Visitenkarten auf Etikettenbögen drucken, mit Serienetiketten
+Comment[fr]=Imprimer des étiquettes et des cartes de visite sur planches, avec publipostage
+Comment[es]=Imprimir etiquetas y tarjetas de visita en hojas, con combinación de correspondencia
+Comment[it]=Stampare etichette e biglietti da visita su fogli, con stampa unione
+Icon=amade-labelprinter
+Exec=/usr/bin/amade-labelprinter %f
+Terminal=false
+Categories=Office;Publishing;
+MimeType=application/x-amadeos-label;
+Keywords=label;labels;address;sticker;business card;mail merge;barcode;QR;Etikett;Adressetikett;Visitenkarte;Serienbrief;étiquette;carte de visite;etiqueta;tarjeta;etichetta;biglietto;
+StartupNotify=true
