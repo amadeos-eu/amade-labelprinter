@@ -137,7 +137,7 @@ public final class PrintDialog extends JDialog {
             r.last().filter(r.printers()::contains).ifPresent(printer::setSelectedItem);
             row.setModel(new javax.swing.SpinnerNumberModel(1, 1, template.rows(), 1));
             column.setModel(new javax.swing.SpinnerNumberModel(1, 1, template.columns(), 1));
-            int records = r.plans().apply(PrintChoice.Mode.ALL).labels().size();
+            int records = r.plans().apply(PrintChoice.Mode.ALL, 0).labels().size();
             all.setText(Mnemonics.strip(msg.format("print.all.count", records)));
         } finally {
             updating = false;
@@ -182,13 +182,7 @@ public final class PrintDialog extends JDialog {
 
     /** The plan as it will print, with the first free position. */
     PrintPlan plan() {
-        PrintChoice.Mode mode = mode();
-        PrintPlan base = request.plans().apply(mode);
-        if (mode == PrintChoice.Mode.FILL_SHEET) {
-            return new PrintPlan(template, base.labels().subList(0, Math.max(1, template.count() - start())),
-                    start());
-        }
-        return new PrintPlan(template, base.labels(), start());
+        return request.plans().apply(mode(), start());
     }
 
     void update() {

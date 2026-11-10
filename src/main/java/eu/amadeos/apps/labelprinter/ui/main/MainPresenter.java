@@ -186,7 +186,7 @@ public final class MainPresenter {
         List<Merge.Label> labels = labels();
         record = Math.max(0, Math.min(record, labels.size() - 1));
         LabelDesign d = doc.design();
-        PrintPlan preview = new PrintPlan(d.sheet(), labels, 0);
+        PrintPlan preview = new PrintPlan(d.sheet(), table.isEmpty() ? withoutData(0) : labels, 0);
         previewSheet = Math.max(0, Math.min(previewSheet, preview.sheets() - 1));
         int highlight = record / d.sheet().count() == previewSheet ? record % d.sheet().count() : -1;
         String recordText = table.isEmpty() ? "" : msg.format("record.of", record + 1, labels.size());
@@ -664,11 +664,28 @@ public final class MainPresenter {
 
     // ---- printing ---------------------------------------------------------------------------------------------
 
+    /**
+     * Without data, every free position of the sheet gets the label, such as a sheet of the same business card;
+     * a «Counter» counts on from label to label.
+     */
+    private List<Merge.Label> withoutData(int start) {
+        LabelDesign d = doc.design();
+        String date = LocalDate.now(s.clock()).format(java.time.format.DateTimeFormatter.ofLocalizedDate(
+                java.time.format.FormatStyle.MEDIUM).withLocale(msg.locale()));
+        List<Merge.Label> labels = new ArrayList<>();
+        for (int n = 1; n <= d.sheet().count() - Math.max(0, start); n++) {
+            labels.add(Merge.label(table, doc.merge(), d, -1, n, date));
+        }
+        return labels;
+    }
+
     /** The plan for a print mode, starting at a position of the first sheet. */
     PrintPlan plan(PrintChoice.Mode mode, int start) {
         List<Merge.Label> labels = labels();
         SheetTemplate sheet = doc.design().sheet();
+        start = Math.max(0, Math.min(sheet.count() - 1, start));
         Merge.Label current = labels.get(Math.min(record, labels.size() - 1));
+        if (table.isEmpty() && mode != PrintChoice.Mode.CURRENT) return new PrintPlan(sheet, withoutData(start), start);
         return switch (mode) {
             case ALL -> new PrintPlan(sheet, labels, start);
             case CURRENT -> new PrintPlan(sheet, List.of(current), start);
@@ -682,7 +699,7 @@ public final class MainPresenter {
 
     public void print() {
         List<String> printers = PrintJobs.printerNames();
-        MainView.PrintRequest request = new MainView.PrintRequest(doc.design(), mode -> plan(mode, 0), printers,
+        MainView.PrintRequest request = new MainView.PrintRequest(doc.design(), this::plan, printers,
                 s.prefs().lastPrinter(), s.prefs()::offset, this::printTestPage);
         view.choosePrint(request).ifPresent(choice -> {
             if (choice.printer() != null) {

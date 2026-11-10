@@ -248,11 +248,11 @@ class DialogsTest {
         DataTable data = new DataTable("d", List.of("No"), java.util.stream.IntStream.range(0, 30)
                 .mapToObj(i -> List.of(Integer.toString(i))).toList());
         List<Merge.Label> labels = Merge.labels(data, MergeSettings.ALL, design, LocalDate.now(), Locale.UK);
-        return new MainView.PrintRequest(design, mode -> switch (mode) {
-            case ALL -> new PrintPlan(sheet, labels, 0);
-            case CURRENT -> new PrintPlan(sheet, labels.subList(0, 1), 0);
-            case FILL_SHEET -> new PrintPlan(sheet, java.util.Collections.nCopies(sheet.count(), labels.getFirst()),
-                    0);
+        return new MainView.PrintRequest(design, (mode, start) -> switch (mode) {
+            case ALL -> new PrintPlan(sheet, labels, start);
+            case CURRENT -> new PrintPlan(sheet, labels.subList(0, 1), start);
+            case FILL_SHEET -> new PrintPlan(sheet, java.util.Collections.nCopies(sheet.count() - start,
+                    labels.getFirst()), start);
         }, List.of("Office laser", "Photo printer"), Optional.of("Photo printer"),
                 printer -> printer.equals("Photo printer") ? new double[]{0.5, -1} : new double[]{0, 0}, tests::add);
     }

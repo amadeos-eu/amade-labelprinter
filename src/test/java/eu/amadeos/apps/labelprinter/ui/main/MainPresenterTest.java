@@ -419,10 +419,23 @@ class MainPresenterTest {
     }
 
     @Test
+    void withoutDataTheLabelFillsTheSheet() {
+        int count = state().design().sheet().count();
+        assertEquals(count, state().preview().labels().size());
+        assertEquals(1, state().preview().sheets());
+        PrintPlan all = p.plan(PrintChoice.Mode.ALL, 3);
+        assertEquals(count - 3, all.labels().size());
+        assertEquals(1, all.sheets());
+        assertEquals(4, all.labels().get(3).number());
+    }
+
+    @Test
     void printingAsksTheWindow() {
         p.print();
         assertTrue(view.printRequest != null);
-        assertEquals(1, view.printRequest.plans().apply(PrintChoice.Mode.ALL).labels().size());
+        int count = state().design().sheet().count();
+        assertEquals(count, view.printRequest.plans().apply(PrintChoice.Mode.ALL, 0).labels().size());
+        assertEquals(1, view.printRequest.plans().apply(PrintChoice.Mode.CURRENT, 0).labels().size());
         assertArrayEquals(new double[]{0, 0}, view.printRequest.offsets().apply("Any"));
     }
 
